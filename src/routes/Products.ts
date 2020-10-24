@@ -2,12 +2,12 @@ import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 const router = Router();
 
-const { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR } = StatusCodes;
+const { OK, INTERNAL_SERVER_ERROR } = StatusCodes;
 
 import {Products  as ProductsEntity }from '@typeorm/entities/Products';
 
 
-import {EntityTarget, getConnection, InsertResult} from "typeorm";
+import {getConnection} from "typeorm";
 import {apiRecordsNotDeletedMessage, apiRecordsNotInsertedMessage} from "@shared/stringGenerators";
 
 
