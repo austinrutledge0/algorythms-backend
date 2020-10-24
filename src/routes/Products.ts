@@ -8,7 +8,7 @@ import {Products  as ProductsEntity }from '@typeorm/entities/Products';
 
 
 import {EntityTarget, getConnection, InsertResult} from "typeorm";
-import {apiRecordsNotInsertedMessage} from "@shared/stringGenerators";
+import {apiRecordsNotDeletedMessage, apiRecordsNotInsertedMessage} from "@shared/stringGenerators";
 
 
 
@@ -79,6 +79,60 @@ router.post('/createProducts', async (req: Request, res: Response) => {
         return res.status(INTERNAL_SERVER_ERROR);
     }
 });
+
+router.post('/deleteProduct', async (req: Request, res: Response) => {
+    try {
+        const connection = getConnection();
+        const productToDelete = new ProductsEntity();
+        productToDelete.productnumber = req.body.productnumber;
+        productToDelete.productname = req.body.productname;
+        productToDelete.price = req.body.price;
+        productToDelete.numberinstock = req.body.numberinstock;
+        await connection.manager.remove(productToDelete);
+        return res.status(OK);
+    }
+    catch
+    {
+        return res.status(INTERNAL_SERVER_ERROR);
+    }
+});
+
+
+router.post('/deleteProducts', async (req: Request, res: Response) => {
+    try {
+        const notDeletedArray: string[] = [];
+        const connection = getConnection();
+        const idsToDelete: string[] = req.body.ids
+
+        let i;
+        for (i = 0; i < idsToDelete.length; i++)
+        {
+            const doesProductAlreadyExist = await connection.manager
+                .find(ProductsEntity, {where:[{productnumber: idsToDelete[i] }]})
+            if(doesProductAlreadyExist.length === 0)
+            {
+                notDeletedArray.push(idsToDelete[i])
+                continue;
+            }
+            else {
+                // You have to use delete instead of remove when deleting by id. Because Typeorm
+             await
+                    connection.manager.delete(ProductsEntity, {productnumber: idsToDelete[i]});
+            }
+
+
+        }
+
+        const apiResponseBody = notDeletedArray.length > 0 ?
+            apiRecordsNotDeletedMessage(notDeletedArray): "";
+        return res.status(OK).json({apiResponseBody});
+    }
+    catch
+    {
+        return res.status(INTERNAL_SERVER_ERROR);
+    }
+});
+
 
 
 

@@ -7,7 +7,7 @@ import {Products as ProductsEntity} from '../src/typeorm/entities/Products';
 import express, { NextFunction, Request, Response } from 'express';
 import StatusCodes from 'http-status-codes';
 import 'express-async-errors';
-
+import bodyParser from "body-parser";
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import {createConnection} from "typeorm";
@@ -16,7 +16,9 @@ import {MysqlConnectionOptions} from "typeorm/driver/mysql/MysqlConnectionOption
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
 
-
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 /************************************************************************************
  *                              Set basic express settings
@@ -45,8 +47,6 @@ createConnection(connectionOptions).then(async connection => {
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
     app.use(cookieParser());
-    console.log("manager " + connection.manager.connection)
-    console.log("products   " + ProductsEntity)
 // Show routes called in console during development
     if (process.env.NODE_ENV === 'development') {
         app.use(morgan('dev'));

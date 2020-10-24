@@ -1,7 +1,6 @@
 import './preStart'; // Must be the first import
 import app from '@server';
 import logger from '@shared/Logger';
-import createTypeOrmConnection from '../services/TypeOrmConnectionService'
 // taskkill /f /im node.exe
 // Start the server
 
