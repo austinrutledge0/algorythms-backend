@@ -12,9 +12,6 @@ export class Customers {
   @Column("char", { name: "cardnumber", nullable: true, length: 32 })
   cardnumber!: string | null;
 
-  @Column("int", { name: "pointcost", nullable: true })
-  pointcost!: number | null;
-
   @Column("varchar", { name: "customerfirstname", nullable: true, length: 50 })
   customerfirstname!: string | null;
 

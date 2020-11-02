@@ -14,7 +14,7 @@ import {apiRecordsNotDeletedMessage, apiRecordsNotInsertedMessage} from "@shared
 
 
 
-
+// Get all products
 router.get('/', async (req: Request, res: Response) => {
     try {
         const connection = getConnection();
@@ -26,6 +26,33 @@ router.get('/', async (req: Request, res: Response) => {
         return res.status(INTERNAL_SERVER_ERROR);
     }
 });
+router.get('/getProduct', async (req: Request, res: Response) => {
+    try {
+        const connection = getConnection();
+        const product = await
+            connection.manager.find(ProductsEntity, {productnumber:req.body.productnumber });
+        return res.status(OK).json({product});
+    }
+    catch
+    {
+        return res.status(INTERNAL_SERVER_ERROR);
+    }
+});
+
+router.post('/getProducts', async (req: Request, res: Response) => {
+    try {
+        const connection = getConnection();
+        const idsToGet: string[] = req.body.ids
+               const products =  await
+                    connection.manager.findByIds(ProductsEntity, idsToGet);
+        return res.status(OK).json({products});
+    }
+    catch
+    {
+        return res.status(INTERNAL_SERVER_ERROR);
+    }
+});
+
 router.post('/createProduct', async (req: Request, res: Response) => {
     try {
         const connection = getConnection();
