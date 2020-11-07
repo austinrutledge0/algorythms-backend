@@ -56,13 +56,13 @@ router.post('/getProducts', async (req: Request, res: Response) => {
 router.post('/createProduct', async (req: Request, res: Response) => {
     try {
         const connection = getConnection();
-        const productToCreate = new ProductsEntity();
+        const productToCreate: ProductsEntity =  new ProductsEntity();
         productToCreate.productnumber = req.body.productnumber;
         productToCreate.productname = req.body.productname;
         productToCreate.price = req.body.price;
         productToCreate.numberinstock = req.body.numberinstock;
         await connection.manager.save(productToCreate);
-        return res.status(OK);
+        return res.status(OK).send();
     }
     catch
     {
@@ -76,9 +76,9 @@ router.post('/createProducts', async (req: Request, res: Response) => {
         const data: ProductsEntity[] = req.body;
 
         for (const product of data) {
-            const test = await connection.manager
+            const doesProductExist = await connection.manager
                 .find(ProductsEntity, {where:[{productnumber: product.productnumber }]})
-            if(test.length > 0)
+            if(doesProductExist.length > 0)
             {
                 notInsertedArray.push(product.productnumber)
                 continue;
